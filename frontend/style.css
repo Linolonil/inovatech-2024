@@ -1,0 +1,142 @@
+/* Reset básico */
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Configurações gerais */
+body {
+    background-color: #f4f4f9;
+    color: #333;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+.sensor-section {
+    margin-bottom: 20px;
+}
+
+.sensor-data {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.sensor-item {
+    flex: 1;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-box {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.status-box.safe {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.status-box.warning {
+    background-color: #FFEB3B;
+    color: #333;
+}
+
+.status-box.danger {
+    background-color: #F44336;
+    color: #fff;
+}
+
+#update-button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#update-button:hover {
+    background-color: #45a049;
+}
+
+.footer {
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}
+/* niveis  */
+/* Status Box */
+.status-box {
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.status-box.safe {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+}
+
+.status-box.warning {
+    background-color: #FFEB3B; /* Amarelo */
+    color: #333;
+}
+
+.status-box.danger {
+    background-color: #F44336; /* Vermelho */
+    color: white;
+}
+/* historico */
+/* Estilo para a tabela de histórico */
+.history-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.history-section th, .history-section td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.history-section th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.history-section tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.history-section tr:hover {
+    background-color: #f1f1f1;
+}
