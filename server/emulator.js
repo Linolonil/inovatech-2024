@@ -1,7 +1,7 @@
 // emulador
 import { WebSocket } from 'ws';
 
-const serverUrl = 'wss://m6b4tqzd-3000.brs.devtunnels.ms/'; // URL do servidor WebSocket
+const serverUrl = 'wss://inovatech-2024.onrender.com'; // URL do servidor WebSocket
 
 const LIMITE_GAS = 800; // Defina o limite de gás
 

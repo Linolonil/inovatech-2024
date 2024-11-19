@@ -1,5 +1,6 @@
 // Estabelecendo a conexão WebSocket com o servidor
 const linkWs = import.meta.env.VITE_WS_URL
+console.log(linkWs)
 const socket = new WebSocket(linkWs);
 
 // Variável para controlar frequência de notificações
