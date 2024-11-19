@@ -1,5 +1,6 @@
 // Estabelecendo a conexão WebSocket com o servidor
-const socket = new WebSocket('ws://localhost:3000');
+const linkWs = import.meta.env.VITE_WS_URL
+const socket = new WebSocket(linkWs);
 
 // Variável para controlar frequência de notificações
 let ultimaNotificacao = 0;

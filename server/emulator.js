@@ -1,7 +1,7 @@
 // emulador
 import { WebSocket } from 'ws';
 
-const serverUrl = 'ws://localhost:3000'; // URL do servidor WebSocket
+const serverUrl = 'wss://m6b4tqzd-3000.brs.devtunnels.ms/'; // URL do servidor WebSocket
 
 const LIMITE_GAS = 800; // Defina o limite de gás
 
