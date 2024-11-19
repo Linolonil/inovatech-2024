@@ -1,8 +1,12 @@
 import { WebSocketServer } from 'ws';
 import express from 'express';
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
+
+// Habilitando CORS para todas as origens
+app.use(cors());
 
 // Inicializa o servidor HTTP
 const server = app.listen(PORT, () => {
