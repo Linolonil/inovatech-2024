@@ -38,9 +38,14 @@ function adicionarAoHistorico(sensorData) {
         <td>${sensorData.umidade || 0} %</td>
     `;
 
-    // Adiciona a nova linha ao corpo da tabela
-    historyTable.appendChild(novaLinha);
+    // Adiciona a nova linha no início da tabela
+    historyTable.insertBefore(novaLinha, historyTable.firstChild);
+
+    if (historyTable.children.length > 5) {
+        historyTable.removeChild(historyTable.lastChild);
+    }
 }
+
 
 // Função para atualizar o fundo com base no nível de gás
 function atualizarCorFundo(nivelGas) {
@@ -52,9 +57,12 @@ function atualizarCorFundo(nivelGas) {
     } else if (nivelGas > 400 && nivelGas <= 700) {
         statusBox.className = 'status-box warning';
         statusBox.textContent = '⚠️ Atenção: Nível de gás moderado.';
-    } else{
-        statusBox.className = 'status-box warning';
-        statusBox.textContent = '⚠️ Atenção: Nível de gás moderadamente alto.';
+    } else if (nivelGas > 700 ) {
+        statusBox.className = 'status-box danger';
+        statusBox.textContent = '⚠️ Atenção: Nível de gás muito alto.';
+    }else{
+        statusBox.className = 'status-box safe';
+        statusBox.textContent = 'Nível seguro de gás detectado.';
     }
 }
 

@@ -8,6 +8,9 @@ const PORT = 3000;
 // Habilitando CORS para todas as origens
 app.use(cors());
 
+// Variável para armazenar os dados do sensor
+let dadosSensor = null;
+
 // Inicializa o servidor HTTP
 const server = app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
@@ -27,6 +30,9 @@ wss.on('connection', (ws) => {
       const dadosRecebidos = JSON.parse(message);
       console.log('Dados recebidos do ESP8266:', dadosRecebidos);
 
+      // Atualiza os dados do sensor
+      dadosSensor = dadosRecebidos;
+
       // Envia os dados para todos os outros clientes conectados
       wss.clients.forEach((client) => {
         if (client !== ws && client.readyState === 1) { // Verifica se o cliente está conectado e pronto
@@ -42,6 +48,21 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
     console.log('Cliente desconectado.');
   });
+});
+
+// Endpoint para obter os dados do sensor
+app.get('/sensor', (req, res) => {
+  if (dadosSensor) {
+    res.json({
+      status: 'success',
+      dados: dadosSensor,
+    });
+  } else {
+    res.status(404).json({
+      status: 'error',
+      message: 'Nenhum dado do sensor disponível no momento.',
+    });
+  }
 });
 
 console.log('Servidor WebSocket inicializado e aguardando conexões...');
