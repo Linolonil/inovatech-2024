@@ -33,7 +33,7 @@ function adicionarAoHistorico(sensorData) {
     novaLinha.innerHTML = `
         <td>${data}</td>
         <td>${horario}</td>
-        <td>${sensorData.valorGas || 0} ppm</td>
+        <td>${sensorData.ppm || 0} ppm</td>
         <td>${sensorData.temperatura || 0} °C</td>
         <td>${sensorData.umidade || 0} %</td>
     `;
