@@ -1,22 +1,67 @@
 // Estabelecendo a conexão WebSocket com o servidor
-const linkWs = import.meta.env.VITE_WS_URL
-console.log(linkWs)
+const linkWs = import.meta.env.VITE_WS_URL;
 const socket = new WebSocket(linkWs);
 
-// Variável para controlar frequência de notificações
+// Variáveis para controlar frequência de notificações
 let ultimaNotificacao = 0;
 
+// Variáveis para calcular média e pico
+let somaGas = 0;
+let contador = 0;
+let picoGas = 0;
+
+// Função para calcular a média
+function calcularMedia(valorGas) {
+    // Verifica se valorGas é um número válido
+    if (typeof valorGas !== 'number' || isNaN(valorGas)) {
+        console.error('Valor de gás inválido:', valorGas);
+        return;
+    }
+
+    somaGas += valorGas;
+    contador++;
+    const media = somaGas / contador;
+
+    // Exibe a média na tela (pode ser em um elemento específico)
+    const mediaElement = document.getElementById('gas-media');
+    if (mediaElement) {
+        mediaElement.textContent = ` ${media.toFixed(2)} `;
+    }
+}
+
+// Função para atualizar dados com verificação
 function atualizarDados(sensorData) {
     const gasElement = document.getElementById('gas-level');
-    const tempElement = document.getElementById('temperature');
-    const humidityElement = document.getElementById('humidity');
+    gasElement.textContent = `${sensorData.ppm}`;
 
-    gasElement.textContent = `${sensorData.valorGas || 0} ppm`;
-    tempElement.textContent = `${sensorData.temperatura || 0} °C`;
-    humidityElement.textContent = `${sensorData.umidade || 0} %`;
+    // Verifica se o valor do gás é válido antes de calcular a média e pico
+    if (sensorData.ppm && !isNaN(sensorData.ppm)) {
+        // Atualiza média e pico
+        calcularMedia(sensorData.ppm);
+        calcularPico(sensorData.ppm);
+    } else {
+        console.error('Valor inválido para o nível de gás:', sensorData.ppm);
+    }
 
-    atualizarCorFundo(sensorData.valorGas);
+    // Atualiza a cor de fundo conforme o nível de gás
+
+    atualizarCorFundo(sensorData.ppm);
+
+    // Adiciona a entrada ao histórico
     adicionarAoHistorico(sensorData);
+}
+
+// Função para calcular o pico
+function calcularPico(valorGas) {
+    if (valorGas > picoGas) {
+        picoGas = valorGas;
+    }
+
+    // Exibe o pico na tela (pode ser em um elemento específico)
+    const picoElement = document.getElementById('gas-pico');
+    if (picoElement) {
+        picoElement.textContent = `${picoGas} `;
+    }
 }
 
 // Função para adicionar uma nova entrada no histórico
@@ -33,9 +78,7 @@ function adicionarAoHistorico(sensorData) {
     novaLinha.innerHTML = `
         <td>${data}</td>
         <td>${horario}</td>
-        <td>${sensorData.ppm || 0} ppm</td>
-        <td>${sensorData.temperatura || 0} °C</td>
-        <td>${sensorData.umidade || 0} %</td>
+        <td>${sensorData.ppm} ppm</td>
     `;
 
     // Adiciona a nova linha no início da tabela
@@ -46,23 +89,26 @@ function adicionarAoHistorico(sensorData) {
     }
 }
 
-
 // Função para atualizar o fundo com base no nível de gás
 function atualizarCorFundo(nivelGas) {
     const statusBox = document.getElementById('status-box');
+    const headerBox = document.getElementById('header');
+    // Limpa classes de status anteriores
+    statusBox.classList.remove('safe', 'warning', 'danger');
+    headerBox.classList.remove('safe', 'warning', 'danger');
 
-    if (nivelGas <= 400) {
-        statusBox.className = 'status-box safe';
+    if (nivelGas <= 6) {
+        statusBox.classList.add('safe');
+        headerBox.classList.add("safe")
         statusBox.textContent = 'Nível seguro de gás detectado.';
-    } else if (nivelGas > 400 && nivelGas <= 700) {
-        statusBox.className = 'status-box warning';
+    } else if (nivelGas > 6 && nivelGas <= 10) {
+        statusBox.classList.add('danger');
+        headerBox.classList.add('danger');
         statusBox.textContent = '⚠️ Atenção: Nível de gás moderado.';
-    } else if (nivelGas > 700 ) {
-        statusBox.className = 'status-box danger';
+    } else if (nivelGas > 10) {
+        statusBox.classList.add('danger');
+        headerBox.classList.add('danger');
         statusBox.textContent = '⚠️ Atenção: Nível de gás muito alto.';
-    }else{
-        statusBox.className = 'status-box safe';
-        statusBox.textContent = 'Nível seguro de gás detectado.';
     }
 }
 
@@ -85,7 +131,6 @@ socket.onopen = () => {
     // Recebendo dados do servidor (emulador ou ESP8266)
     socket.onmessage = (event) => {
         const dados = JSON.parse(event.data);
-        console.log('Dados recebidos do servidor:', dados);
         atualizarDados(dados); 
     };
 };
