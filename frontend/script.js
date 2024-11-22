@@ -28,10 +28,33 @@ function calcularMedia(valorGas) {
         mediaElement.textContent = ` ${media.toFixed(2)} `;
     }
 }
+// muda o progresso do círculo
+function atualizarProgressoCircular(valorGas) {
+    // Definir o valor máximo do ppm para 100%
+    const valorMaximo = 50;
+
+    // Calcular o progresso como uma porcentagem do valor máximo
+    const progresso = (valorGas * 100) / valorMaximo;
+
+    // Comprimento total do círculo (circunferência)
+    const comprimentoTotal = 628; // Atualizar para o valor correto baseado no raio do círculo
+
+    // Converter a porcentagem para o valor do stroke-dashoffset
+    const strokeDashOffset = comprimentoTotal - (comprimentoTotal * progresso / 100);
+
+    // Atualizar o progresso do círculo
+    const circle = document.querySelector('#circle-two');
+    if (circle) {
+        circle.style.strokeDashoffset = strokeDashOffset;
+    } else {
+        console.error("Círculo não encontrado. Verifique o seletor ou o DOM.");
+    }
+}
+
 
 // Função para atualizar dados com verificação
 function atualizarDados(sensorData) {
-    const gasElement = document.getElementById('gas-level');
+    const gasElement = document.getElementById('gas-level') || 0;
     gasElement.textContent = `${sensorData.ppm}`;
 
     // Verifica se o valor do gás é válido antes de calcular a média e pico
@@ -39,6 +62,7 @@ function atualizarDados(sensorData) {
         // Atualiza média e pico
         calcularMedia(sensorData.ppm);
         calcularPico(sensorData.ppm);
+        atualizarProgressoCircular(sensorData.ppm); 
     } else {
         console.error('Valor inválido para o nível de gás:', sensorData.ppm);
     }
@@ -92,23 +116,23 @@ function adicionarAoHistorico(sensorData) {
 // Função para atualizar o fundo com base no nível de gás
 function atualizarCorFundo(nivelGas) {
     const statusBox = document.getElementById('status-box');
-    const headerBox = document.getElementById('header');
+    const circle = document.querySelector('.iconLoaderProgressFirst circle');
     // Limpa classes de status anteriores
     statusBox.classList.remove('safe', 'warning', 'danger');
-    headerBox.classList.remove('safe', 'warning', 'danger');
+    circle.classList.remove('safe', 'warning', 'danger');
 
-    if (nivelGas <= 6) {
+    if (nivelGas <= 2) {
         statusBox.classList.add('safe');
-        headerBox.classList.add("safe")
-        statusBox.textContent = 'Nível seguro de gás detectado.';
+        circle.style.stroke = '#28a745';
+        statusBox.textContent = '🌞 Qualidade do ar está ótima';
     } else if (nivelGas > 6 && nivelGas <= 10) {
-        statusBox.classList.add('danger');
-        headerBox.classList.add('danger');
-        statusBox.textContent = '⚠️ Atenção: Nível de gás moderado.';
+        statusBox.classList.add('warning');
+        circle.style.stroke = '#ffc107'; 
+        statusBox.textContent = '⚠️ Atenção: qualidade do ar moderada';
     } else if (nivelGas > 10) {
         statusBox.classList.add('danger');
-        headerBox.classList.add('danger');
-        statusBox.textContent = '⚠️ Atenção: Nível de gás muito alto.';
+        circle.style.stroke = '#dc3545'; 
+        statusBox.textContent = '☠️ Perigo: qualidade do ar ruim.';
     }
 }
 

@@ -128,14 +128,15 @@ void setup() {
     delay(1000);
   }
 
-  WiFiMulti.addAP("SILVA", "ljbs0202");
+  WiFiMulti.addAP("nome do TEU WIFI", "senha da TUA REDE WIFI");
 
   //WiFi.disconnect();
   while (WiFiMulti.run() != WL_CONNECTED) {
     delay(100);
   }
-
-  webSocket.beginSSL("inovatech-2024.onrender.com", 443);
+// 
+  webSocket.beginSSL("192.192.19.19", 3000);
+// 
   webSocket.onEvent(webSocketEvent);
 }
 

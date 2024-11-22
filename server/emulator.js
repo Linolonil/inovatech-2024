@@ -1,10 +1,11 @@
 // emulador
 import { WebSocket } from 'ws';
+import dotenv from "dotenv";
 
-const serverUrl = 'wss://inovatech-2024.onrender.com'; 
-// const serverUrl = 'ws://localhost:3000'; 
+dotenv.config();
 
-const LIMITE_GAS = 1200; 
+const serverUrl = process.env.SERVER_WEBSOCKET_URL; 
+const LIMITE_GAS = 25; 
 const INTERVALO = 1500;
 const DURACAO_CICLO = 5000;
 
@@ -12,14 +13,12 @@ let tempoAtual = 0; // Controla o tempo dentro do ciclo
 
 function gerarDadosSensor(tempo) {
     const proporcao = tempo / DURACAO_CICLO; // Proporção do tempo no ciclo
-    const valorGas = proporcao <= 0.5
+    const ppm = proporcao <= 0.5
         ? LIMITE_GAS * (proporcao * 2) // Aumenta gradualmente na primeira metade do ciclo
         : LIMITE_GAS * (1 - (proporcao - 0.5) * 2); // Diminui gradualmente na segunda metade
 
     return {
-        valorGas: Math.round(valorGas), // Gás em ppm (arredondado)
-        temperatura: (20 + Math.random() * 10).toFixed(2), // Temperatura entre 20 e 30 graus Celsius
-        umidade: (30 + Math.random() * 20).toFixed(2), // Umidade relativa entre 30% e 50%
+        ppm: Math.round(ppm), // Gás em ppm (arredondado)
     };
 }
 
