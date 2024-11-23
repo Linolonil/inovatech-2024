@@ -28,27 +28,57 @@ function calcularMedia(valorGas) {
         mediaElement.textContent = ` ${media.toFixed(2)} `;
     }
 }
+// muda o progresso do círculo 
+function atualizarProgressoCircular(valorGas) {
+    // Definir o valor máximo do ppm para 100%
+    const valorMaximo = 50000;
+
+    // Calcular o progresso como uma porcentagem do valor máximo
+    const progresso = Math.min((valorGas * 100) / valorMaximo, 100);
+
+    // Comprimento total do círculo (circunferência)
+    const raio = 120; // Raio do círculo
+    const comprimentoTotal = 2 * Math.PI * raio;
+
+    // Converter a porcentagem para o valor do stroke-dashoffset
+    const strokeDashOffset = comprimentoTotal - (comprimentoTotal * progresso / 100);
+
+    // Atualizar o progresso do círculo
+    const circle = document.querySelector('#circle-two');
+    if (circle) {
+        circle.style.strokeDasharray = comprimentoTotal;
+        circle.style.strokeDashoffset = strokeDashOffset;
+        if (valorGas <= 2000) {
+            circle.style.stroke = '#28a745';
+        } else if (valorGas > 2000 && valorGas <= 5000) {
+            circle.style.stroke = '#ffc107'; 
+        } else if (valorGas > 5000 && valorGas <= 40000) {
+            circle.style.stroke = '#dc3545'; 
+        } else if (valorGas > 40000) {
+            circle.style.stroke = '#000'; 
+        }
+    } else {
+        console.error("Círculo não encontrado. Verifique o seletor ou o DOM.");
+    }
+}
 
 // Função para atualizar dados com verificação
 function atualizarDados(sensorData) {
-    const gasElement = document.getElementById('gas-level');
-    gasElement.textContent = `${sensorData.ppm}`;
+    const gasElement = document.getElementById('gas-level') || 0;
+    const ppm = sensorData.ppm ?? 0; 
+    const valorAtt = ppm * 1000;
+    gasElement.textContent = `${valorAtt.toFixed(2)}`;
 
-    // Verifica se o valor do gás é válido antes de calcular a média e pico
-    if (sensorData.ppm && !isNaN(sensorData.ppm)) {
-        // Atualiza média e pico
-        calcularMedia(sensorData.ppm);
-        calcularPico(sensorData.ppm);
+    if (!isNaN(ppm)) {
+        calcularMedia(ppm * 1000);
+        calcularPico(ppm *1000);
+        atualizarProgressoCircular(ppm* 1000);
     } else {
-        console.error('Valor inválido para o nível de gás:', sensorData.ppm);
+        console.error('Valor inválido para o nível de gás:', ppm);
     }
 
-    // Atualiza a cor de fundo conforme o nível de gás
-
-    atualizarCorFundo(sensorData.ppm);
-
-    // Adiciona a entrada ao histórico
-    adicionarAoHistorico(sensorData);
+    atualizarCorFundo(ppm * 1000);
+    adicionarAoHistorico(ppm * 1000);
 }
 
 // Função para calcular o pico
@@ -60,7 +90,7 @@ function calcularPico(valorGas) {
     // Exibe o pico na tela (pode ser em um elemento específico)
     const picoElement = document.getElementById('gas-pico');
     if (picoElement) {
-        picoElement.textContent = `${picoGas} `;
+        picoElement.textContent = `${picoGas.toFixed(2)} `;
     }
 }
 
@@ -72,13 +102,14 @@ function adicionarAoHistorico(sensorData) {
     const agora = new Date();
     const data = agora.toLocaleDateString();
     const horario = agora.toLocaleTimeString();
+    const ppm = sensorData ?? 0; 
 
     // Cria uma nova linha na tabela
     const novaLinha = document.createElement('tr');
     novaLinha.innerHTML = `
         <td>${data}</td>
         <td>${horario}</td>
-        <td>${sensorData.ppm} ppm</td>
+        <td>${ppm.toFixed(2)} ppm</td>
     `;
 
     // Adiciona a nova linha no início da tabela
@@ -92,23 +123,27 @@ function adicionarAoHistorico(sensorData) {
 // Função para atualizar o fundo com base no nível de gás
 function atualizarCorFundo(nivelGas) {
     const statusBox = document.getElementById('status-box');
-    const headerBox = document.getElementById('header');
+    const textBox = document.getElementById('text-box');
+    const circle = document.querySelector('.iconLoaderProgressFirst circle');
     // Limpa classes de status anteriores
-    statusBox.classList.remove('safe', 'warning', 'danger');
-    headerBox.classList.remove('safe', 'warning', 'danger');
+    statusBox.classList.remove('safe', 'warning', 'danger', 'kill');
 
-    if (nivelGas <= 6) {
+    if (nivelGas <= 2000) {
         statusBox.classList.add('safe');
-        headerBox.classList.add("safe")
-        statusBox.textContent = 'Nível seguro de gás detectado.';
-    } else if (nivelGas > 6 && nivelGas <= 10) {
+        // circle.style.stroke = '#28a745';
+        textBox.textContent = '🌞 Qualidade do ar está ótima';
+    } else if (nivelGas > 2000 && nivelGas <= 5000) {
+        statusBox.classList.add('warning');
+        // circle.style.stroke = '#ffc107'; 
+        textBox.textContent = '⚠️ Atenção: qualidade do ar moderada';
+    } else if (nivelGas > 5000 && nivelGas <= 40000 ) {
         statusBox.classList.add('danger');
-        headerBox.classList.add('danger');
-        statusBox.textContent = '⚠️ Atenção: Nível de gás moderado.';
-    } else if (nivelGas > 10) {
-        statusBox.classList.add('danger');
-        headerBox.classList.add('danger');
-        statusBox.textContent = '⚠️ Atenção: Nível de gás muito alto.';
+        // circle.style.stroke = '#dc3545'; 
+        textBox.textContent = '⚠️ Perigo: qualidade do ar ruim.';
+    } else if (nivelGas > 40000) {
+        statusBox.classList.add('kill');
+        // circle.style.stroke = '#dc3545'; 
+        textBox.textContent = '☠️ Perigo: RISCO DE VIDA!.';
     }
 }
 
