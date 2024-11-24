@@ -7,17 +7,11 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  background-image: url("../assets/bg.jpg");
-  background-size: cover;
-  background-position: bottom;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-color: rgba(0, 0, 0, 0.2); /* Camada escura */
-  background-blend-mode: overlay;
-
   color: #333;
   margin: 0;
   padding: 0;
+  background: rgba(0, 0, 0, 0.2) url("/bg.jpg") no-repeat fixed bottom / cover;
+  background-blend-mode: overlay;
 }
 
 /* Cabeçalho */
@@ -28,6 +22,22 @@ body {
   padding: 30px 0;
   background-color: rgb(10, 8, 8);
   overflow: hidden;
+}
+
+.header.safe {
+  background-color: #28a745;
+}
+
+.header.warning {
+  background-color: #ffbf00;
+}
+
+.header.danger {
+  background-color: #dc3545;
+}
+
+.header.kill {
+  background-color: #000;
 }
 
 h1 {
@@ -54,7 +64,6 @@ h1 {
   color: #555;
 }
 
-/* Layout para os dados principais */
 .sensor-data-container {
   display: flex;
   justify-content: space-between;
@@ -68,9 +77,9 @@ h1 {
   color: #333;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 30%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -89,8 +98,8 @@ h1 {
 
 .sensor-ppm {
   font-size: 1.2rem;
-  color: #555;
   font-weight: 600;
+  color: #555;
 }
 
 /* Seção de Status do Ambiente */
@@ -111,6 +120,9 @@ h1 {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 10px;
 }
 
 .status-box.safe {
@@ -126,20 +138,6 @@ h1 {
 }
 
 .status-box.kill {
-  background-color: #000;
-}
-.header.safe {
-  background-color: #28a745;
-}
-
-.header.warning {
-  background-color: #ffbf00;
-}
-
-.header.danger {
-  background-color: #dc3545;
-}
-.header.kill {
   background-color: #000;
 }
 
@@ -182,13 +180,13 @@ h1 {
 .history-section tbody tr:hover {
   background-color: #f1f1f1;
 }
-/* barra de regresso kk */
-/* Estilos para a barra de progresso */
+
+/* Barra de progresso */
 .loader {
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: hidden;
 }
+
 .loader:hover {
   transform: translateY(-5px);
 }
@@ -203,58 +201,27 @@ h1 {
 }
 
 .box-circle {
-  position: relative;
-  display: flex;
-  justify-self: center;
-  align-items: center;
-  width: fit-content;
-  height: fit-content;
-  border-radius: 50%;
-  background-color: #cacacaa7;
-}
-
-.box-circle svg {
-  height: 260px;
-  width: 260px;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #cacacaa7;
+  border-radius: 50%;
+}
+
+.box-circle svg {
+  width: 260px;
+  height: 260px;
 }
 
 circle {
-  width: 150px;
-  height: 150px;
   fill: none;
   stroke: black;
   stroke-width: 20px;
-  transform: translate(5px, 5px);
   stroke-dasharray: 760;
   stroke-dashoffset: 760;
-  transform: rotate(-90deg); /* Gira o círculo para iniciar no topo */
-  transform-origin: 50% 50%; /* Alinha a rotação ao centro do círculo */
-}
-
-circle:nth-child(2) {
-  transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease; /* Adiciona animação suave */
-}
-
-.status-box {
-  font-size: 1rem;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.status-box .safe {
-  color: #28a745;
-}
-
-.status-box .warning {
-  color: #ffc107;
-}
-
-.status-box .danger {
-  color: #dc3545;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.5s ease-in-out;
 }
 
 circle:nth-child(1) {
@@ -264,175 +231,118 @@ circle:nth-child(1) {
 
 circle:nth-child(2) {
   stroke: rgb(42, 170, 63);
+  transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease;
 }
 
 .sensor-value {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: -100px;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .sensor-value h2 {
   font-size: 40px;
   color: #000000;
 }
-circle {
-  transition: stroke-dashoffset 0.5s ease-in-out;
-}
 
-/* status do ar */
-/* Contêiner geral */
+/* Indicadores de Status */
 .status-container {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-content: center;
-  margin-bottom: 50px;
   gap: 30px;
+  margin-bottom: 50px;
 }
 
-/* Estilo para cada item de status */
 .status-item {
-  width: auto;
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 5px;
 }
 
-/* Estilo para a bolinha */
 .status-bullet {
-  text-align: center;
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
-/* Cores para as bolinhas */
 .good {
-  background-color: #28a745; /* Cor verde para 'Boa' */
+  background-color: #28a745;
 }
 
 .moderate {
-  background-color: #ffbf00; /* Cor amarela para 'Moderada' */
+  background-color: #ffbf00;
 }
 
 .bad {
-  background-color: #dc3545; /* Cor vermelha para 'Ruim' */
+  background-color: #dc3545;
 }
 
-/* Estilo para o texto */
 .status-text {
   font-size: 20px;
   font-weight: 500;
 }
 
-#text-box {
-  font-size: 1.2rem;
-  color: #ffffff;
-  font-weight: 800;
-}
-
 /* Responsividade */
-/* Responsividade Geral */
-
 @media (max-width: 1200px) {
   .sensor-box {
-    width: 45%; /* Ajusta o tamanho dos boxes para telas médias */
-  }
-
-  .status-item {
-    width: 20%; /* Diminui o tamanho do status-item */
+    width: 45%;
   }
 
   .status-text {
-    font-size: 18px; /* Texto ligeiramente menor */
-  }
-  .highlight-section {
-    width: 100%; /* Centraliza o título e texto no centro */
+    font-size: 18px;
   }
 }
 
 @media (max-width: 768px) {
-  /* Ajustando a disposição para tablets e celulares */
   .sensor-data-container {
     flex-direction: column;
-    align-items: center; /* Centraliza os itens no centro */
+    align-items: center;
     gap: 140px;
   }
 
   .sensor-box {
-    overflow: hidden;
-  }
-
-  .sensor-box {
-    width: 80%; /* Alarga o box em telas menores */
-    margin-bottom: 20px; /* Adiciona espaço entre os itens */
+    width: 80%;
+    margin-bottom: 20px;
   }
 
   .status-container {
-    display: flex !important;
-    width: 100%;
-    justify-content: space-around !important;
-  }
-  .status-item {
-    width: auto; /* Ajusta o tamanho dos itens de status */
+    justify-content: space-around;
   }
 
   .status-text {
-    font-size: 16px; /* Texto menor para telas pequenas */
+    font-size: 16px;
   }
 
   .history-section table {
-    font-size: 0.85rem; /* Reduz o tamanho da tabela em telas menores */
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
-  /* Estilo para dispositivos móveis */
   h1 {
-    font-size: 1.8rem; /* Reduz o tamanho do título principal */
+    font-size: 1.8rem;
   }
 
   h2 {
-    font-size: 1.4rem; /* Reduz o tamanho dos subtítulos */
+    font-size: 1.4rem;
   }
 
   .sensor-box {
-    width: 100%; /* Ocupa 100% da largura do container */
+    width: 100%;
   }
 
   .status-text {
-    font-size: 14px; /* Texto ainda menor para se adequar */
+    font-size: 14px;
   }
 
-  .loader {
-    margin-bottom: 20px;
-  }
-  .sensor-value h2 {
-    font-size: 50px !important;
-  }
   circle {
-    stroke-width: 15px; /* Reduz a espessura do traço */
-  }
-
-  .status-container {
-    display: flex !important;
-    width: 100%;
-    justify-content: space-around !important;
-  }
-  .status-item {
-    width: auto; /* Ajusta o tamanho dos itens de status */
-  }
-
-  .sensor-value h2 {
-    font-size: 30px; /* Reduz o tamanho do valor do sensor */
+    stroke-width: 15px;
   }
 }
