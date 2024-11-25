@@ -10,7 +10,7 @@ let somaGas = 0, contador = 0, picoGas = 0; // Controle de média e pico
 // Atualiza os dados recebidos do servidor
 function atualizarDados(sensorData) {
     const ppm = sensorData.ppm ?? 0; 
-    const valorAtt = ppm * 1000;
+    const valorAtt = ppm ;
 
     // Atualiza o nível de gás exibido
     const gasElement = document.getElementById('gas-level');

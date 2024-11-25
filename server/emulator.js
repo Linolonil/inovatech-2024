@@ -16,7 +16,7 @@ const sensores = [
 
 // Função para gerar dados de sensor com offset
 function gerarDadosSensor(tempo, offset) {
-  const proporcao = (tempo + offset) / DURACAO_CICLO; // Adiciona o offset ao tempo
+  const proporcao = (tempo + offset) / DURACAO_CICLO; // Adiciona o offset ao tempo 
   const ppm =
     proporcao <= 0.5
       ? LIMITE_GAS * (proporcao * 2) // Aumenta gradualmente na primeira metade do ciclo

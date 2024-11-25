@@ -24,75 +24,78 @@ function SensorData({ sensor }) {
   };
 
   const toggleRealTimeData = () => {
-    setShowRealTimeData((prevState) => !prevState); // Alterna o estado de exibição dos dados
+    setShowRealTimeData((prevState) => !prevState); 
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200">
-      <h3 className="text-2xl font-semibold text-gray-800 mb-4">{sensor.deviceName}</h3>
+    <li className="flex flex-col p-4 bg-white rounded-lg shadow-lg border border-gray-200 mb-4">
+      {/* Nome e Localização do Sensor */}
+      <div className="flex flex-col mb-2">
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">{sensor.deviceName}</h3>
+        <div className="flex items-center space-x-2">
+          {isEditing ? (
+            <>
+              <input
+                type="text"
+                value={newLocation}
+                onChange={(e) => setNewLocation(e.target.value)} 
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button 
+                onClick={handleSaveLocation} 
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Salvar
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-600">Localização: {sensor.location}</p>
+              <button 
+                onClick={handleEditLocation} 
+                className="text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out">
+                <MdEdit className="inline-block mr-1" />
+                Editar
+              </button>
+            </>
+          )}
+        </div>
+      </div>
 
-      <div className="flex items-center space-x-4 mb-4">
-        {isEditing ? (
-          <>
-            <input
-              type="text"
-              value={newLocation}
-              onChange={(e) => setNewLocation(e.target.value)} 
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button 
-              onClick={handleSaveLocation} 
-              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              Salvar
-            </button>
-          </>
-        ) : (
-          <>
-            <p className="text-gray-600">Localização: {sensor.location}</p>
-            <button 
-              onClick={handleEditLocation} 
-              className="text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out">
-              <MdEdit className="inline-block mr-1" />
-              Editar
-            </button>
-          </>
+      {/* Mostrar dados em tempo real */}
+      <div className="mb-4">
+        <button
+          onClick={toggleRealTimeData}
+          className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2 flex items-center justify-center">
+          {showRealTimeData ? (
+            <>
+              <MdVisibilityOff className="mr-2" />
+              Esconder Dados em Tempo Real
+            </>
+          ) : (
+            <>
+              <MdVisibility className="mr-2" />
+              Ver Dados em Tempo Real
+            </>
+          )}
+        </button>
+
+        {showRealTimeData && (
+          <div className="mt-2">
+            <RealTimeSensorData sensor={sensor} sensorId={sensor._id} />
+          </div>
         )}
       </div>
 
-      {/* Botão para visualizar dados em tempo real */}
-      <button
-        onClick={toggleRealTimeData}
-        className="px-6 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-4 flex items-center justify-center">
-        {showRealTimeData ? (
-          <>
-            <MdVisibilityOff className="mr-2" />
-            Esconder Dados em Tempo Real
-          </>
-        ) : (
-          <>
-            <MdVisibility className="mr-2" />
-            Ver Dados em Tempo Real
-          </>
-        )}
-      </button>
-
-      {/* Exibe o componente RealTimeSensorData, caso o estado showRealTimeData seja true */}
-      {showRealTimeData && (
-        <div className="mt-4">
-          <RealTimeSensorData sensor={sensor} sensorId={sensor._id} />
-        </div>
-      )}
-
-      {/* Botões de ações */}
-      <div className="flex space-x-4 mt-6">
+      {/* Ações */}
+      <div className="flex space-x-4">
         <button 
           onClick={handleRemoveSensor} 
-          className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">
           <MdDelete className="inline-block mr-2" />
-          Desvincular Sensor
+          Desvincular
         </button>
       </div>
-    </div>
+    </li>
   );
 }
 

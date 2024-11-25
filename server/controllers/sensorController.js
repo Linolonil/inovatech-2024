@@ -1,9 +1,19 @@
 import Sensor from "../models/Sensor.js";
 import Usuario from "../models/Usuario.js";
+import FabricatedSensor from "../models/FabricatedSensor.js"; // Modelo para a tabela de sensores fabricados
 
 export const criarSensor = async (req, res) => {
   try {
     const { userId, deviceName, location } = req.body;
+
+    // Verificar se o sensor existe na tabela de sensores fabricados
+    const sensorFabricado = await FabricatedSensor.findOne({ deviceName });
+    if (!sensorFabricado) {
+      return res.status(400).json({
+        status: "error",
+        message: "Sensor não encontrado no banco de PRODUÇÂO.",
+      });
+    }
 
     // Verificar se o usuário existe
     const usuario = await Usuario.findById(userId);
@@ -18,7 +28,7 @@ export const criarSensor = async (req, res) => {
     }
 
     // Criar um novo sensor
-    const novoSensor = new Sensor({ userId, deviceName, location});
+    const novoSensor = new Sensor({ userId, deviceName, location });
     await novoSensor.save();
 
     // Associar o sensor ao usuário
@@ -35,6 +45,7 @@ export const criarSensor = async (req, res) => {
     res.status(500).json({ status: "error", message: "Erro ao associar sensor." });
   }
 };
+
 
 export const consultarSensor = async (req, res) => {
   try {

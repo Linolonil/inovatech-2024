@@ -20,7 +20,7 @@ const Login = () => {
   };
 
   const handleRegisterRedirect = () => {
-    navigate("/register"); // Redireciona para a página de cadastro
+    navigate("/register");
   };
 
   if (signed) {
@@ -32,24 +32,33 @@ const Login = () => {
       className="flex items-center justify-center min-h-screen bg-cover bg-center"
       style={{ backgroundImage: `url("${bg}")` }}
     >
-      <div className="flex flex-col md:flex-row items-center justify-center bg-black bg-opacity-70 p-10 rounded-lg shadow-lg max-w-5xl w-full">
+      <div className="flex flex-col md:flex-row items-center justify-center bg-black bg-opacity-80 p-10 rounded-lg shadow-2xl max-w-5xl w-full">
         {/* Left Section: Welcome Message */}
-        <div className="hidden h-[26.5rem] md:flex flex-col items-start justify-center w-full md:w-1/2 p-8 text-white space-y-6 relative">
-          <div className="p-3">
-            <h1 className="text-4xl font-bold">Bem-vindo ao BIOTRACK</h1>
-            <p className="text-gray-300 mt-10">
-              Gerencie e visualize os seus sensores de forma prática e
-              eficiente.
-            </p>
-          </div>
+        <div className="hidden md:flex flex-col items-start justify-center w-full md:w-1/2 p-8 text-white space-y-6">
+          <h1 className="text-5xl font-extrabold tracking-wide text-light-blue-400">
+            BIOTRACK
+          </h1>
+          <p className="text-lg text-gray-300 mt-4 leading-relaxed">
+            Gerencie e visualize seus sensores de forma prática, eficiente e
+            segura. Uma plataforma pensada para você, onde a tecnologia e
+            simplicidade se encontram.
+          </p>
         </div>
+
         {/* Right Section: Login Form */}
-        <div className="flex flex-col w-full md:w-1/2 p-8 text-white space-y-6 bg-gray-800 bg-opacity-80 rounded-lg">
-          <h1 className="text-3xl text-center font-bold">Login</h1>
-          <form onSubmit={handleSignIn} className="space-y-4 pb-5">
+        <div className="flex flex-col w-full md:w-1/2 p-8 bg-gray-900 bg-opacity-90 rounded-lg space-y-6">
+          {/* Nome BIOTRACK no modo responsivo */}
+          <h1 className="md:hidden text-5xl text-center font-extrabold text-light-blue-400">
+            BIOTRACK
+          </h1>
+
+          <h2 className="text-3xl text-center font-extrabold text-white">
+            Acesse sua conta
+          </h2>
+          <form onSubmit={handleSignIn} className="space-y-5">
             <div>
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="block text-sm font-medium text-gray-300"
               >
                 Email de acesso
@@ -61,7 +70,7 @@ const Login = () => {
                 required
                 autoComplete="email"
                 placeholder="Digite seu email"
-                className="w-full px-4 py-3 mt-1 bg-gray-700 text-white rounded focus:outline-none focus:ring focus:ring-blue-500"
+                className="w-full px-4 py-3 mt-1 bg-gray-800 text-white rounded focus:outline-none focus:ring focus:ring-light-blue-500"
               />
             </div>
             <div>
@@ -78,24 +87,27 @@ const Login = () => {
                 autoComplete="current-password"
                 required
                 placeholder="Digite sua senha"
-                className="w-full px-4 py-3 mt-1 bg-gray-700 text-white rounded focus:outline-none focus:ring focus:ring-blue-500"
+                className="w-full px-4 py-3 mt-1 bg-gray-800 text-white rounded focus:outline-none focus:ring focus:ring-light-blue-500"
               />
             </div>
 
             <Button
-              loading={loading}
+              disabled={loading}
               type="submit"
-              className="w-full px-4 py-3 font-semibold text-white flex justify-center items-center text-center bg-light-blue-700 rounded-lg hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200"
+              className={`w-full px-4 py-3 text-white font-bold text-center bg-light-blue-600 rounded-lg hover:bg-light-blue-700 focus:outline-none focus:ring-2 focus:ring-light-blue-500 focus:ring-offset-2 transition duration-200 ${
+                loading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
-              Entrar
+              {loading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
+
           <div className="text-center">
             <button
               onClick={handleRegisterRedirect}
-              className="w-full py-2 font-medium text-white rounded hover:border-b-white focus:outline-none focus:ring focus:ring-blue-400 transition"
+              className="w-full py-2 font-medium text-light-blue-500 hover:underline focus:outline-none focus:ring focus:ring-light-blue-400 transition"
             >
-              <span className="text-sm">Cadastre-se</span>
+              <span className="text-sm">Não tem uma conta? Cadastre-se</span>
             </button>
           </div>
         </div>

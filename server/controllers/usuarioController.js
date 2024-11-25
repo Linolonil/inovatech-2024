@@ -50,12 +50,31 @@ export const consultarSensoresUsuario = async (req, res) => {
 export const atualizarUsuario = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { name, email, senha } = req.body;
+    const { name, email, senha, confirmacaoSenha } = req.body;
 
     // Verificar se o usuário existe
     const usuario = await Usuario.findById(userId);
     if (!usuario) {
       return res.status(404).json({ status: "error", message: "Usuário não encontrado." });
+    }
+
+    // Verificar se o e-mail já está em uso por outro usuário
+    if (email && email !== usuario.email) {
+      const usuarioComEmail = await Usuario.findOne({ email });
+      if (usuarioComEmail) {
+        return res.status(400).json({
+          status: "error",
+          message: "Este e-mail está indisponível. Por favor, escolha outro.",
+        });
+      }
+    }
+
+    // Verificar se as senhas coincidem
+    if (senha && senha !== confirmacaoSenha) {
+      return res.status(400).json({
+        status: "error",
+        message: "As senhas não coincidem. Tente novamente.",
+      });
     }
 
     // Atualizar os campos fornecidos

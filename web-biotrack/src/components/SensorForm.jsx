@@ -15,18 +15,19 @@ function SensorForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-full max-w-4xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Cadastrar Sensor</h2>
 
       <div className="mb-4">
-        <label htmlFor="deviceName" className="block text-sm font-medium text-gray-700">Nome do Sensor</label>
+        <label htmlFor="deviceName" className="block text-sm font-medium text-gray-700">Número de serie do sensor</label>
         <input
           type="number"
           id="deviceName"
-          placeholder="Número de serie do sensor"
+          placeholder="EX: 001  ou 002"
           value={deviceName}
           onChange={(e) => setDeviceName(e.target.value)}
           className="w-full px-4 py-3 mt-2 bg-gray-100 text-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
         />
       </div>
 
@@ -35,10 +36,11 @@ function SensorForm() {
         <input
           type="text"
           id="location"
-          placeholder="Localização"
+          placeholder="Ex: Sensor da Cozinha"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           className="w-full px-4 py-3 mt-2 bg-gray-100 text-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
         />
       </div>
 
