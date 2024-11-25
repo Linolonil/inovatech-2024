@@ -112,7 +112,7 @@ export default function SensorTable() {
               <tr>
                 <td colSpan="4" className="text-center p-4">
                   <Typography variant="small" color="gray">
-                    No sensors available.
+                    Nenhum sensor cadastrado
                   </Typography>
                 </td>
               </tr>

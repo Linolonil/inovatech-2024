@@ -1,7 +1,19 @@
 import { WebSocketServer, WebSocket } from "ws";
+// gambiarra inicio
+let dataSensor03 = {}; 
+
+ function setDataSensor03(data) {
+  dataSensor03 = data; 
+}
+
+export function getDataSensor03() {
+  return dataSensor03; 
+}
+
+// gambiarra fim
 
 const sensorConnections = new Map();  
-const userConnections = new Map();    
+const userConnections = new Map();  
 
 export const initializeWebSocket = (server) => {
   const wss = new WebSocketServer({ server });
@@ -13,7 +25,10 @@ export const initializeWebSocket = (server) => {
       try {
         const data = JSON.parse(message);
         const { type, sensorId, userId, deviceName, dados, status } = data;
-
+        
+        if(sensorId == "001"){
+          setDataSensor03(data)
+        }
         // Quando um sensor envia dados de status
         if (type === "sensorStatus" && sensorId && status !== undefined) {
           console.log(`Sensor ${sensorId} está ${status ? "ativo" : "inativo"}`);
