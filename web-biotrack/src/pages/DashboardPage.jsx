@@ -10,7 +10,7 @@ import {
   Drawer,
 } from "@material-tailwind/react";
 import { AiOutlineMenu } from "react-icons/ai";
-import UpdateUser from "../components/updateUser";
+import UpdateUser from "../components/UpdateUser.jsx";
 
 function DashboardPage() {
   const { user, SignOut } = useContext(AuthContext);
