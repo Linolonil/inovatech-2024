@@ -132,20 +132,58 @@ function RealTimeSensorData({ sensorId, sensor }) {
   }
 
   return (
-    <div className="mt-4 p-4">
+    <div className="mt-1 p-4">
+      <div className="mb-4">
+        <h3 className="text-xl font-semibold">Legenda de Qualidade do Ar</h3>
+        <div className="flex items-center space-x-4">
+          {/* Bolinha verde */}
+          <div className="flex items-center">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "green" }}
+            ></div>
+            <span className="ml-2 text-sm text-gray-700">
+              Qualidade do ar ótima
+            </span>
+          </div>
+
+          {/* Bolinha amarela */}
+          <div className="flex items-center">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "yellow" }}
+            ></div>
+            <span className="ml-2 text-sm text-gray-700">
+              Qualidade do ar moderada
+            </span>
+          </div>
+
+          {/* Bolinha vermelha */}
+          <div className="flex items-center">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: "red" }}
+            ></div>
+            <span className="ml-2 text-sm text-gray-700">
+              Qualidade do ar ruim
+            </span>
+          </div>
+        </div>
+      </div>
+
       <h2 className="text-xl font-semibold text-gray-700 mb-10 ">
-        Dados em Tempo Real
+        Dados em Tempo Real em PPM (Partes por milhão)
       </h2>
 
       {/* Barra de Progresso da Qualidade do Ar */}
       <div
         className="mb-4 flex justify-center items-center"
-        style={{ width: 150, height: 150, margin: "0 auto" }}
+        style={{ width: 180, height: 180, margin: "0 auto" }}
       >
         <CircularProgressbar
           value={qualidadeAr}
           maxValue={400}
-          text={`${qualidadeAr} PPM`}
+          text={`${qualidadeAr} `}
           styles={buildStyles({
             pathColor:
               qualidadeAr < 12
