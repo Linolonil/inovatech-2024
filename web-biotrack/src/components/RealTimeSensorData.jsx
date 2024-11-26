@@ -132,7 +132,6 @@ function RealTimeSensorData({ sensorId, sensor }) {
   }
 
   return (
-    
     <div className="mt-1 p-4">
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Legenda de Qualidade do Ar</h3>
@@ -181,31 +180,32 @@ function RealTimeSensorData({ sensorId, sensor }) {
         className="mb-4 flex justify-center items-center"
         style={{ width: 180, height: 180, margin: "0 auto" }}
       >
-        <CircularProgressbar
-          value={qualidadeAr}
-          maxValue={400}
-          text={`${qualidadeAr} `}
-          styles={buildStyles({
-            pathColor:
-              qualidadeAr < 12
-                ? "green"
-                : qualidadeAr >= 12 && qualidadeAr <= 20
-                ? "yellow"
-                : qualidadeAr > 20
-                ? "red"
-                : "White",
-            textColor:
-              qualidadeAr < 12
-                ? "green"
-                : qualidadeAr >= 12 && qualidadeAr <= 20
-                ? "yellow"
-                : qualidadeAr > 20
-                ? "red"
-                : "White",
-            trailColor: "#d6d6d6",
-            strokeWidth: 10,
-          })}
-        />
+       <CircularProgressbar
+  value={qualidadeAr}
+  maxValue={400}
+  text={`${qualidadeAr} `}
+  styles={buildStyles({
+    pathColor:
+      qualidadeAr < 12
+        ? "rgb(0, 128, 0)" // Verde
+        : qualidadeAr >= 12 && qualidadeAr <= 20
+        ? "rgb(204, 204, 0)" // Amarelo mais escuro
+        : qualidadeAr > 20
+        ? "rgb(255, 0, 0)" // Vermelho
+        : "rgb(255, 255, 255)", // Branco
+    textColor:
+      qualidadeAr < 12
+        ? "rgb(0, 128, 0)" // Verde
+        : qualidadeAr >= 12 && qualidadeAr <= 20
+        ? "rgb(204, 204, 0)" // Amarelo mais escuro
+        : qualidadeAr > 20
+        ? "rgb(255, 0, 0)" // Vermelho
+        : "rgb(255, 255, 255)", // Branco
+    trailColor: "rgb(240, 240, 240)", // Fundo claro
+    strokeWidth: 10,
+  })}
+/>
+
       </div>
 
       {/* Histórico dos Últimos 5 Dados */}
