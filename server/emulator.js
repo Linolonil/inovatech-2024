@@ -11,7 +11,7 @@ const DURACAO_CICLO = 5000;
 
 // Lista de sensores a serem emulados com offsets
 const sensores = [
-  { id: "003", offset: 50 }, 
+  { id: "001", offset: 1 }, 
 ];
 
 // Função para gerar dados de sensor com offset

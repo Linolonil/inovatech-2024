@@ -132,6 +132,7 @@ function RealTimeSensorData({ sensorId, sensor }) {
   }
 
   return (
+    
     <div className="mt-1 p-4">
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Legenda de Qualidade do Ar</h3>

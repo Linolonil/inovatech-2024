@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nível de Fumaça - Sensor 001</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .sensor-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; /* Limite máximo de largura */
+            min-width: 250px; /* Largura mínima para telas muito pequenas */
+            box-sizing: border-box;
+        }
+
+        .led-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .led {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+            font-weight: bold;
+            transition: background-color 0.5s ease, transform 0.3s;
+        }
+
+        .led.on {
+            transform: scale(1.1);
+        }
+
+        .led.green.on {
+            background-color: #00cc66;
+            color: white;
+        }
+
+        .led.yellow.on {
+            background-color: #ffcc00;
+            color: black;
+        }
+
+        .led.red.on {
+            background-color: #ff3300;
+            color: white;
+        }
+
+        .status-text {
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .offline {
+            color: gray;
+        }
+
+        /* Mini monitor (value display) */
+        .value-display {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border-radius: 8px;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Responsividade para telas menores */
+        @media (max-width: 600px) {
+            .sensor-container {
+                padding: 15px;
+                width: 100%;
+                margin: 0 10px; /* Margem adicional para telas menores */
+            }
+
+            .value-display {
+                font-size: 20px;
+            }
+
+            .status-text {
+                font-size: 16px;
+            }
+
+            .led-container {
+                margin: 15px 0;
+            }
+
+            .led {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sensor-container">
+        <h2>Sensor 001</h2>
+        <!-- Mini monitor displaying the ppm value -->
+        <div class="value-display" id="ppm-value">0 ppm</div>
+        <div class="led-container">
+            <div class="led green" id="led-green"></div>
+            <div class="led yellow" id="led-yellow"></div>
+            <div class="led red" id="led-red"></div>
+        </div>
+        <p class="status-text" id="status-text">Aguardando dados...</p>
+    </div>
+
+    <script>
+        const ws = new WebSocket("wss://inovatech-2024-1.onrender.com");
+        const ledGreen = document.getElementById("led-green");
+        const ledYellow = document.getElementById("led-yellow");
+        const ledRed = document.getElementById("led-red");
+        const statusText = document.getElementById("status-text");
+        const ppmValue = document.getElementById("ppm-value");
+
+        ws.onopen = () => {
+            console.log("WebSocket conectado.");
+            statusText.textContent = "Conexão estabelecida.";
+            statusText.classList.remove("offline");
+
+            const requestData = JSON.stringify({
+                type: "usuario",
+                userId: "12345",
+                sensorId: "001"
+            });
+            ws.send(requestData);
+        };
+
+        ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+
+                if (data.type === "sensorData" && data.sensorId === "001") {
+                    const ppm = data.data.ppm;
+
+                    // Update the displayed ppm value on the mini monitor
+                    ppmValue.textContent = `${ppm} ppm`;
+
+                    if (ppm < 12) {
+                        ledGreen.classList.add("on");
+                        ledYellow.classList.remove("on");
+                        ledRed.classList.remove("on");
+                        statusText.textContent = "Nível Seguro";
+                    } else if (ppm >= 12 && ppm <= 20) {
+                        ledGreen.classList.add("on");
+                        ledYellow.classList.add("on");
+                        ledRed.classList.remove("on");
+                        statusText.textContent = "Nível Moderado";
+                    } else {
+                        ledGreen.classList.add("on");
+                        ledYellow.classList.add("on");
+                        ledRed.classList.add("on");
+                        statusText.textContent = "Nível Perigoso";
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao processar mensagem:", error);
+            }
+        };
+
+        ws.onclose = () => {
+            statusText.textContent = "Conexão perdida.";
+            statusText.classList.add("offline");
+        };
+
+        ws.onerror = () => {
+            statusText.textContent = "Erro na conexão.";
+            statusText.classList.add("offline");
+        };
+    </script>
+</body>
+
+</html>
