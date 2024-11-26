@@ -218,13 +218,13 @@
                     ppmValue.textContent = `${ppm} ppm`;
 
                     // Lógica para controlar os LEDs e o status
-                    if (ppm < 12) {
+                    if (ppm < 50) {
                         ledGreen.classList.add("on");
                         ledYellow.classList.remove("on");
                         ledRed.classList.remove("on");
                         statusText.textContent = "Nível Seguro";
                         stopAlarm();
-                    } else if (ppm >= 12 && ppm <= 20) {
+                    } else if (ppm >= 50 && ppm <= 100) {
                         ledGreen.classList.add("on");
                         ledYellow.classList.add("on");
                         ledRed.classList.remove("on");
