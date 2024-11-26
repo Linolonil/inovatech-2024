@@ -186,19 +186,19 @@ function RealTimeSensorData({ sensorId, sensor }) {
   text={`${qualidadeAr} `}
   styles={buildStyles({
     pathColor:
-      qualidadeAr < 12
+      qualidadeAr < 50
         ? "rgb(0, 128, 0)" // Verde
-        : qualidadeAr >= 12 && qualidadeAr <= 20
+        : qualidadeAr >= 50 && qualidadeAr <= 100
         ? "rgb(204, 204, 0)" // Amarelo mais escuro
-        : qualidadeAr > 20
+        : qualidadeAr > 100
         ? "rgb(255, 0, 0)" // Vermelho
         : "rgb(255, 255, 255)", // Branco
     textColor:
-      qualidadeAr < 12
+      qualidadeAr < 50
         ? "rgb(0, 128, 0)" // Verde
-        : qualidadeAr >= 12 && qualidadeAr <= 20
+        : qualidadeAr >= 50 && qualidadeAr <= 100
         ? "rgb(204, 204, 0)" // Amarelo mais escuro
-        : qualidadeAr > 20
+        : qualidadeAr > 100
         ? "rgb(255, 0, 0)" // Vermelho
         : "rgb(255, 255, 255)", // Branco
     trailColor: "rgb(240, 240, 240)", // Fundo claro
@@ -224,31 +224,31 @@ function RealTimeSensorData({ sensorId, sensor }) {
         <h3>Status do Ambiente:</h3>
         <div
           className={`status-box ${
-            qualidadeAr < 12
+            qualidadeAr < 50
               ? "safe"
-              : qualidadeAr >= 12 && qualidadeAr <= 20
+              : qualidadeAr >= 50 && qualidadeAr <= 100
               ? "moderate"
-              : qualidadeAr > 20
+              : qualidadeAr > 100
               ? "danger"
               : "kill"
           }`}
         >
           <p
             className={`text-center text-lg font-bold mt-10 ${
-              qualidadeAr < 12
+              qualidadeAr < 50
                 ? "text-green-500"
-                : qualidadeAr >= 12 && qualidadeAr <= 20
+                : qualidadeAr >= 50 && qualidadeAr <= 100
                 ? "text-yellow-500"
-                : qualidadeAr > 20
+                : qualidadeAr > 100
                 ? "text-red-500"
                 : "text-gray-500"
             }`}
           >
-            {qualidadeAr < 12
+            {qualidadeAr < 50
               ? "🌞 Qualidade do ar está ótima"
-              : qualidadeAr >= 12 && qualidadeAr <= 20
+              : qualidadeAr >= 50 && qualidadeAr <= 100
               ? "⚠️ Qualidade do ar moderada"
-              : qualidadeAr > 20
+              : qualidadeAr > 100
               ? "❌ Qualidade do ar ruim"
               : "❌ Sem dados disponíveis"}
           </p>
