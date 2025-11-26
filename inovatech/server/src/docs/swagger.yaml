@@ -1,0 +1,680 @@
+openapi: 3.0.0
+info:
+  title: EmoteTutor API
+  version: 1.0.0
+  description: API para gerenciar dispositivos de controle emocional
+
+servers:
+  - url: http://localhost:3001/api
+    description: Servidor local
+
+tags:
+  - name: Auth
+    description: Autenticação de usuários
+  - name: Devices
+    description: Gerenciamento de dispositivos
+  - name: Events
+    description: Eventos e histórico
+  - name: Analytics
+    description: Análises e relatórios
+
+paths:
+  /auth/register:
+    post:
+      summary: Registra um novo usuário
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+            example:
+              email: usuario@exemplo.com
+              password: senha123
+              name: João Silva
+      responses:
+        201:
+          description: Usuário criado e token retornado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        400:
+          description: Email já existe ou dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/login:
+    post:
+      summary: Autentica um usuário
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+            example:
+              email: usuario@exemplo.com
+              password: senha123
+      responses:
+        200:
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        401:
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /devices:
+    get:
+      summary: Lista todos os dispositivos do usuário
+      tags: [Devices]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Lista de dispositivos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+        401:
+          description: Não autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      summary: Cria um novo dispositivo
+      tags: [Devices]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDeviceInput"
+            example:
+              deviceId: CRIANCA-01
+              name: Controle Sala
+      responses:
+        201:
+          description: Dispositivo criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        400:
+          description: deviceId ausente ou já existe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          description: Não autenticado
+
+  /devices/{deviceId}:
+    get:
+      summary: Busca um dispositivo específico
+      tags: [Devices]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CRIANCA-01
+      responses:
+        200:
+          description: Dispositivo encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        404:
+          description: Dispositivo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          description: Não autenticado
+
+    delete:
+      summary: Remove um dispositivo
+      tags: [Devices]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CRIANCA-01
+      responses:
+        200:
+          description: Dispositivo removido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Dispositivo removido com sucesso
+        404:
+          description: Dispositivo não encontrado
+        401:
+          description: Não autenticado
+
+  /devices/{deviceId}/config:
+    patch:
+      summary: Atualiza a configuração do dispositivo
+      tags: [Devices]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: CRIANCA-01
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDeviceConfigInput"
+            examples:
+              buttons:
+                summary: Atualizar mapeamento de botões
+                value:
+                  config:
+                    buttons:
+                      1: feliz
+                      2: triste
+                      3: ansioso
+              combos:
+                summary: Adicionar combos
+                value:
+                  config:
+                    combos:
+                      - sequence: [1, 2, 1]
+                        message: Respirar fundo
+                        category: Relaxamento
+              complete:
+                summary: Configuração completa
+                value:
+                  config:
+                    buttons:
+                      1: feliz
+                      2: triste
+                      3: ansioso
+                      4: calmo
+                    combos:
+                      - sequence: [1, 2, 1]
+                        message: Respirar fundo e relaxar
+                        category: Relaxamento
+                      - sequence: [1, 1, 4]
+                        message: Você consegue!
+                        category: Motivação
+      responses:
+        200:
+          description: Configuração atualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        400:
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        404:
+          description: Dispositivo não encontrado
+        401:
+          description: Não autenticado
+
+  /devices/{deviceId}/combos:
+    get:
+      summary: Lista combos do dispositivo
+      tags: [Devices]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Lista de combos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deviceId:
+                    type: string
+                  total:
+                    type: integer
+                  combos:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Combo"
+
+    put:
+      summary: Atualiza combos do dispositivo
+      tags: [Devices]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                combos:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Combo"
+      responses:
+        200:
+          description: Combos atualizados
+
+  /events:
+    post:
+      summary: Registra um novo evento
+      tags: [Events]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventInput"
+      responses:
+        201:
+          description: Evento criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /devices/{deviceId}/events:
+    get:
+      summary: Lista eventos de um dispositivo
+      tags: [Events]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: event
+          in: query
+          schema:
+            type: string
+            enum:
+              [buttonPress, comboCompleted, deviceConnected, deviceDisconnected]
+      responses:
+        200:
+          description: Lista de eventos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+
+  /devices/{deviceId}/analytics/summary:
+    get:
+      summary: Resumo de emoções por período
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: Resumo de emoções
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmotionsSummary"
+
+  /devices/{deviceId}/analytics/timeline:
+    get:
+      summary: Timeline de eventos por dia
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: days
+          in: query
+          schema:
+            type: integer
+            default: 7
+      responses:
+        200:
+          description: Timeline de eventos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Timeline"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtido através do login
+
+  schemas:
+    RegisterInput:
+      type: object
+      required: [email, password, name]
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email do usuário
+        password:
+          type: string
+          format: password
+          minLength: 6
+          description: Senha (mínimo 6 caracteres)
+        name:
+          type: string
+          description: Nome completo do usuário
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              description: ID único do usuário
+            email:
+              type: string
+              description: Email do usuário
+            name:
+              type: string
+              description: Nome do usuário
+        token:
+          type: string
+          description: JWT token para autenticação
+
+    CreateDeviceInput:
+      type: object
+      required: [deviceId, name]
+      properties:
+        deviceId:
+          type: string
+          description: Identificador único do dispositivo
+          example: CRIANCA-01
+        name:
+          type: string
+          description: Nome amigável do dispositivo
+          example: Controle Sala
+
+    UpdateDeviceConfigInput:
+      type: object
+      required: [config]
+      properties:
+        config:
+          type: object
+          properties:
+            buttons:
+              type: object
+              additionalProperties:
+                type: string
+              description: Mapeamento de botões
+              example:
+                "1": feliz
+                "2": triste
+                "3": ansioso
+            combos:
+              type: array
+              description: Sequências de botões com mensagens
+              items:
+                $ref: "#/components/schemas/Combo"
+
+    Combo:
+      type: object
+      required: [sequence, message]
+      properties:
+        sequence:
+          type: array
+          items:
+            type: integer
+          description: Sequência de IDs de botões
+          example: [1, 2, 1]
+        message:
+          type: string
+          description: Mensagem resultante
+          example: Respirar fundo e relaxar
+        category:
+          type: string
+          description: Categoria do combo
+          example: Relaxamento
+
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único do MongoDB
+        deviceId:
+          type: string
+          description: Identificador do dispositivo
+        owner:
+          type: string
+          description: ID do usuário proprietário
+        name:
+          type: string
+          description: Nome do dispositivo
+        config:
+          type: object
+          properties:
+            buttons:
+              type: object
+              additionalProperties:
+                type: string
+              description: Mapeamento de botões
+            combos:
+              type: array
+              items:
+                $ref: "#/components/schemas/Combo"
+        createdAt:
+          type: string
+          format: date-time
+          description: Data de criação
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data da última atualização
+
+    CreateEventInput:
+      type: object
+      required: [deviceId, event]
+      properties:
+        deviceId:
+          type: string
+        event:
+          type: string
+          enum:
+            [buttonPress, comboCompleted, deviceConnected, deviceDisconnected]
+        data:
+          type: object
+          properties:
+            buttonId:
+              type: integer
+            color:
+              type: string
+            emotion:
+              type: string
+            sequence:
+              type: array
+              items:
+                type: integer
+            message:
+              type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        deviceId:
+          type: string
+        userId:
+          type: string
+        event:
+          type: string
+        data:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    EmotionsSummary:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        period:
+          type: object
+          properties:
+            start:
+              type: string
+            end:
+              type: string
+        summary:
+          type: array
+          items:
+            type: object
+            properties:
+              emotion:
+                type: string
+              count:
+                type: integer
+              lastOccurrence:
+                type: string
+                format: date-time
+
+    Timeline:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        days:
+          type: integer
+        timeline:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+              emotions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    emotion:
+                      type: string
+                    count:
+                      type: integer
+              totalEvents:
+                type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Mensagem de erro
+          example: Dispositivo não encontrado
