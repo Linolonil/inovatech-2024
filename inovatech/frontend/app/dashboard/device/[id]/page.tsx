@@ -62,7 +62,7 @@ export default function DevicePage({ params }: { params: Promise<{ id: string }>
   const [selectedButtons, setSelectedButtons] = useState<number[]>([])
   const [isCreatingCombo, setIsCreatingCombo] = useState(false)
 
-  const { lastMessage } = useWebSocket("/ws/dashboard")
+  const { lastMessage } = useWebSocket("/ws")
 
   useEffect(() => {
     const fetchData = async () => {

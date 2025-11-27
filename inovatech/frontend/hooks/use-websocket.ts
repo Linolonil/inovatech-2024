@@ -15,7 +15,7 @@ export function useWebSocket(endpoint: string) {
   const wsRef = useRef<WebSocket | null>(null)
 
   const connect = useCallback(() => {
-    const token = localStorage.getItem("token")
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjc0Zjc4ZmMwMDEwNGM0YzI4MjA0YiIsImlhdCI6MTc2NDIzMTcyNiwiZXhwIjoxNzY0ODM2NTI2fQ.ehU6DKdzRSyP8mqBiiVROFfMcT71iVXWRtl-ZH9Wku4"
     if (!token) return
 
     const ws = new WebSocket(`${WS_BASE_URL}${endpoint}?token=${token}`)

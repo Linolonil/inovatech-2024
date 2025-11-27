@@ -12,16 +12,13 @@ export function DashboardHeader() {
 
   const handleLogout = () => {
     logout()
-    router.push("/login")
+    router.push("/auth")
   }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-md">
       <div className="container flex h-18 items-center justify-between px-6">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
-            <Heart className="h-5 w-5 text-primary-foreground" />
-          </div>
           <span className="text-xl font-bold text-foreground">Emote Tutor</span>
         </Link>
         <div className="flex items-center gap-2">

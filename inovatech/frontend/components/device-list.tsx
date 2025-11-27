@@ -28,7 +28,7 @@ export function DeviceList() {
   const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState("")
 
-  const { lastMessage } = useWebSocket("/ws/dashboard")
+  const { lastMessage } = useWebSocket("/ws")
 
   const fetchDevices = async () => {
     try {
