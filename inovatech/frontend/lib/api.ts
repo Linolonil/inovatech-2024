@@ -1,7 +1,13 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://inovatech-2024.onrender.com/api"
 
+// Helper para pegar o token do localStorage
+const getAuthToken = (): string | null => {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem('token')
+}
+
 export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjc0Zjc4ZmMwMDEwNGM0YzI4MjA0YiIsImlhdCI6MTc2NDIzNjg2MywiZXhwIjoxNzY0ODQxNjYzfQ.dOnVa1LBzucCSCzSHwCyvIx_ITvCC900ZWfIPFKv5a8"
+  const token = getAuthToken()
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -11,13 +17,27 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
       ...options.headers,
     },
   })
-console.log("response apiRequest", response)
+
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Erro na requisição" }))
+    
+    console.error("❌ API Error:", error)
+    
+    // Se for erro 401 (não autorizado), limpa o localStorage
+    if (response.status === 401) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      window.location.href = '/auth'
+    }
+    
     throw new Error(error.message || "Erro na requisição")
   }
 
-  return response.json()
+  const data = await response.json()
+  console.log("✅ API Response:", data)
+  
+  return data
 }
 
 // Auth
@@ -92,4 +112,4 @@ export interface Combo {
   name: string
   sequence: number[]
   createdAt: string
-}
+} 

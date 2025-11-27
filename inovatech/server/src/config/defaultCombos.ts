@@ -33,7 +33,7 @@ export const DEFAULT_COMBOS: ICombo[] = [
     { sequence: [4, 2, 2], message: "Não quero!", category: "Respostas" },
 
     { sequence: [5, 1], message: "Quero brincar", category: "Atividades" },
-    { sequence: [5, 2], message: "Quero ler", category: "Atividades" },
+    { sequence: [5, 2], message: "Quero ficar em casa", category: "Atividades" },
     { sequence: [5, 3], message: "Quero desenhar", category: "Atividades" },
     { sequence: [5, 4], message: "Quero assistir TV", category: "Atividades" },
     { sequence: [5, 5], message: "Quero ouvir música", category: "Atividades" },
@@ -57,10 +57,10 @@ export const DEFAULT_COMBOS: ICombo[] = [
 ];
 
 export const DEFAULT_BUTTON_MAPPING: Record<number, string> = {
-    1: "verde",
-    2: "azul",
-    3: "vermelho",
-    4: "amarelo",
-    5: "roxo",
-    6: "branco"
+    1: "vermelho",
+    2: "branco1",
+    3: "azul",
+    4: "verde",
+    5: "branco2",
+    6: "preto"
 };
