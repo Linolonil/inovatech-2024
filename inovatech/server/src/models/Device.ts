@@ -13,11 +13,10 @@ export interface IDevice extends Document {
     name?: string;
     config: {
         buttons: {
-            // Mapeamento buttonId → cor/emoção base
             [key: number]: string;
         };
         combos: ICombo[];
-        comboTimeout?: number; // Tempo máximo entre botões (ms) - padrão 3000
+        comboTimeout?: number; 
     };
     createdAt?: Date;
     updatedAt?: Date;

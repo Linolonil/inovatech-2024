@@ -4,47 +4,56 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3001"
 
-interface WebSocketMessage {
-  type: string
-  data: unknown
-}
-
-export function useWebSocket(endpoint: string) {
+export function useWebSocket(endpoint: string | null, subscribeDeviceId?: string) {
   const [isConnected, setIsConnected] = useState(false)
-  const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null)
+  const [lastMessage, setLastMessage] = useState<any | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
 
   const connect = useCallback(() => {
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjc0Zjc4ZmMwMDEwNGM0YzI4MjA0YiIsImlhdCI6MTc2NDIzMTcyNiwiZXhwIjoxNzY0ODM2NTI2fQ.ehU6DKdzRSyP8mqBiiVROFfMcT71iVXWRtl-ZH9Wku4"
-    if (!token) return
+    if (!endpoint) return
 
-    const ws = new WebSocket(`${WS_BASE_URL}${endpoint}?token=${token}`)
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjc0Zjc4ZmMwMDEwNGM0YzI4MjA0YiIsImlhdCI6MTc2NDIzNjg2MywiZXhwIjoxNzY0ODQxNjYzfQ.dOnVa1LBzucCSCzSHwCyvIx_ITvCC900ZWfIPFKv5a8"
 
-    ws.onopen = () => setIsConnected(true)
+    const ws = new WebSocket(`${WS_BASE_URL}${endpoint}`)
+
+    ws.onopen = () => {
+      setIsConnected(true)
+
+      if (subscribeDeviceId) {
+        ws.send(
+          JSON.stringify({
+            event: "subscribe",
+            deviceId: subscribeDeviceId
+          })
+        )
+      }
+    }
+
     ws.onclose = () => {
       setIsConnected(false)
-      setTimeout(connect, 3000) // Reconectar após 3s
+      setTimeout(connect, 3000)
     }
-    ws.onmessage = (event) => {
+
+    ws.onmessage = event => {
       try {
-        const message = JSON.parse(event.data)
-        setLastMessage(message)
+        setLastMessage(JSON.parse(event.data))
       } catch {
-        console.error("Erro ao parsear mensagem WebSocket")
+        setLastMessage(event.data)
       }
     }
 
     wsRef.current = ws
-  }, [endpoint])
+  }, [endpoint, subscribeDeviceId])
 
   useEffect(() => {
     connect()
     return () => wsRef.current?.close()
   }, [connect])
 
-  const sendMessage = useCallback((message: WebSocketMessage) => {
+  const sendMessage = useCallback((msg: unknown) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify(message))
+      wsRef.current.send(JSON.stringify(msg))
     }
   }, [])
 
