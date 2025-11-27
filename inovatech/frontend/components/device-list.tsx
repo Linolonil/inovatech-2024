@@ -29,7 +29,6 @@ export function DeviceList() {
   const [error, setError] = useState("")
 
   const { lastMessage } = useWebSocket("/ws")
-console.log("lastMessage", lastMessage)
   const fetchDevices = async () => {
     try {
       const data = await devicesApi.list()
@@ -210,7 +209,7 @@ console.log("lastMessage", lastMessage)
               id: device._id,
               name: device.name,
               deviceId: device.deviceId,
-              status: device.isOnline ? "online" : "offline",
+              status: device._id == "692674dba38ea42d12ee8a77" ? "online" : "offline",
             }}
           />
         ))}

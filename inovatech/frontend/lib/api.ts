@@ -1,9 +1,9 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://inovatech-2024.onrender.com/api"
 
 export async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjc0Zjc4ZmMwMDEwNGM0YzI4MjA0YiIsImlhdCI6MTc2NDIzMTcyNiwiZXhwIjoxNzY0ODM2NTI2fQ.ehU6DKdzRSyP8mqBiiVROFfMcT71iVXWRtl-ZH9Wku4"
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Mjc0Zjc4ZmMwMDEwNGM0YzI4MjA0YiIsImlhdCI6MTc2NDIzNjg2MywiZXhwIjoxNzY0ODQxNjYzfQ.dOnVa1LBzucCSCzSHwCyvIx_ITvCC900ZWfIPFKv5a8"
 
-  const response = await fetch(`${API_BASE_URL}/api${endpoint}`, {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -11,7 +11,7 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
       ...options.headers,
     },
   })
-
+console.log("response apiRequest", response)
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Erro na requisição" }))
     throw new Error(error.message || "Erro na requisição")

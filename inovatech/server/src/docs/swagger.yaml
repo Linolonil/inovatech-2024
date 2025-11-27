@@ -5,7 +5,7 @@ info:
   description: API para gerenciar dispositivos de controle emocional
 
 servers:
-  - url: http://localhost:3001/api
+  - url: https://inovatech-2024.onrender.com/api
     description: Servidor local
 
 tags:

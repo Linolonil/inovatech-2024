@@ -132,6 +132,26 @@ export async function getDevices(req: AuthRequest, res: Response) {
     }
 }
 
+export async function getDevice(req: AuthRequest, res: Response) {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ error: "Não autenticado" });
+        }   
+        const { deviceId } = req.params;
+        const device = await Device.findOne({
+            deviceId,
+            owner: req.user._id
+        });
+        if (!device) {
+            return res.status(404).json({ error: "Dispositivo não encontrado" });
+            }
+        res.json(device);
+    }
+    catch (error) {
+        console.error("Erro ao buscar device:", error);
+        res.status(500).json({ error: "Erro ao buscar dispositivo" });
+    }
+}
 
 export async function deleteDevice(req: AuthRequest, res: Response) {
     try {
