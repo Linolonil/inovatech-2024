@@ -1,10 +1,10 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/auth-context"
+import { Bell, LogOut, User } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Heart, LogOut, Bell, User } from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
 
 export function DashboardHeader() {
   const { user, logout } = useAuth()
@@ -16,7 +16,7 @@ export function DashboardHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-primary/10 bg-background/80 backdrop-blur-md flex justify-center items-center">
       <div className="container flex h-18 items-center justify-between px-6">
         <Link href="/dashboard" className="flex items-center gap-3">
           <span className="text-xl font-bold text-foreground">Emote Tutor</span>

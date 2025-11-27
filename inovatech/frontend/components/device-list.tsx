@@ -1,14 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Plus, Smartphone } from "lucide-react"
 import { DeviceCard } from "@/components/device-card"
-import { devicesApi, type Device } from "@/lib/api"
-import { useWebSocket } from "@/hooks/use-websocket"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -18,6 +12,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useWebSocket } from "@/hooks/use-websocket"
+import { devicesApi, type Device } from "@/lib/api"
+import { Plus, Smartphone } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export function DeviceList() {
   const [devices, setDevices] = useState<Device[]>([])
@@ -29,7 +29,7 @@ export function DeviceList() {
   const [error, setError] = useState("")
 
   const { lastMessage } = useWebSocket("/ws")
-
+console.log("lastMessage", lastMessage)
   const fetchDevices = async () => {
     try {
       const data = await devicesApi.list()

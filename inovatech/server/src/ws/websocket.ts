@@ -59,7 +59,13 @@ export function setupWebSocket(server: Server) {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
                 ws.userId = decoded.id;
                 ws.isDevice = false;
-                console.log(`[${new Date().toISOString()}] Cliente frontend conectado: ${decoded.id}`);
+
+                ws.send(JSON.stringify({
+                    event: "connected",
+                    userId: decoded.id,
+                    timestamp: new Date().toISOString()
+                }));
+                
             } catch (error) {
                 ws.send(JSON.stringify({ error: "Invalid token" }));
                 ws.close();
